@@ -181,6 +181,16 @@ extension LocationManager {
     }
     #endif
     
+    #if os(iOS) || targetEnvironment(macCatalyst)
+    manager.monitoredRegions = { id in
+        let monitoredRegions = dependencies[id]?.manager.monitoredRegions.map { Region(rawValue: $0) }
+        switch monitoredRegions {
+        case let .some(monitoredRegions): return Set(monitoredRegions)
+        case .none: return Set<Region>()
+        }
+    }
+    #endif
+
     return manager
   }()
 }
