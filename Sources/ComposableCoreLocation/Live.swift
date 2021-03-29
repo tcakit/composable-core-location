@@ -160,7 +160,27 @@ extension LocationManager {
         .fireAndForget { dependencies[id]?.manager.stopMonitoringSignificantLocationChanges() }
       }
     #endif
-
+    
+    #if os(iOS) || targetEnvironment(macCatalyst)
+    manager.startMonitoringForRegion = { id, region in
+        .fireAndForget {
+            if let region = region.rawValue {
+                dependencies[id]?.manager.startMonitoring(for: region)
+            }
+        }
+    }
+    #endif
+    
+    #if os(iOS) || targetEnvironment(macCatalyst)
+    manager.stopMonitoringForRegion = { id, region in
+        .fireAndForget {
+            if let region = region.rawValue {
+                dependencies[id]?.manager.stopMonitoring(for: region)
+            }
+        }
+    }
+    #endif
+    
     return manager
   }()
 }
